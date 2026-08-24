@@ -12,7 +12,7 @@ Release:        1
 Summary:        A Quickshell-based custom shell setup
 License:        MIT
 URL:            https://github.com/noctalia-dev/noctalia
-Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9.tar.gz
+Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9/%{name}-5.0.0-beta.9.tar.gz
 
 BuildRequires:	meson
 BuildRequires:  pkgconfig(sdbus-c++)
