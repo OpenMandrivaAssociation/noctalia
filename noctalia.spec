@@ -1,47 +1,150 @@
 # disable empty debuh
-%global debug_package %{nil}
+#global debug_package %{nil}
 
-Name:           noctalia-shell
-Version:		4.1.1
+%define basever     5.0.0
+%define prerel      beta
+%define prerelnum   9
+%define tag         v%{basever}-%{prerel}.%{prerelnum}
+
+Name:           noctalia
+Version:	%{basever}~%{prerel}.%{prerelnum}
 Release:        1
 Summary:        A Quickshell-based custom shell setup
 License:        MIT
-URL:            https://github.com/noctalia-dev/noctalia-shell
-Source0:        https://github.com/noctalia-dev/noctalia-shell/releases/download/v%{version}/noctalia-v%{version}.tar.gz
+URL:            https://github.com/noctalia-dev/noctalia
+Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9.tar.gz
+
+BuildRequires:	meson
+BuildRequires:  pkgconfig(sdbus-c++)
+BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(wayland-protocols)
+BuildRequires:  pkgconfig(wayland-egl)
+BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  pkgconfig(fontconfig)
+BuildRequires:  pkgconfig(cairo)
+BuildRequires:  pkgconfig(cairo-ft)
+BuildRequires:  pkgconfig(pango)
+BuildRequires:  pkgconfig(pangocairo)
+BuildRequires:  pkgconfig(pangoft2)
+BuildRequires:  pkgconfig(harfbuzz)
+BuildRequires:  pkgconfig(librsvg-2.0)
+BuildRequires:  pkgconfig(xkbcommon)
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(gobject-2.0)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(libsecret-1)
+BuildRequires:  pkgconfig(libsodium)
+BuildRequires:  pkgconfig(polkit-agent-1)
+BuildRequires:  pkgconfig(polkit-gobject-1)
+BuildRequires:  pkgconfig(libpipewire-0.3)
+BuildRequires:  pkgconfig(wireplumber-0.5)
+BuildRequires:  pkgconfig(libcurl)
+BuildRequires:  pkgconfig(libqalculate)
+BuildRequires:  pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig(md4c)
+BuildRequires:  pkgconfig(nlohmann_json)
+BuildRequires:  pkgconfig(tomlplusplus)
+BuildRequires:  pkgconfig(libical)
+BuildRequires:  pam-devel
+BuildRequires:  glibc-devel
+BuildRequires:  pkgconfig(jemalloc)
+BuildRequires:  pkgconfig(egl)
+BuildRequires:  pkgconfig(glesv2)
+BuildRequires:  pkgconfig(stb)
+BuildRequires:  pkgconfig(libwebp)
+BuildRequires:  pkgconfig(libjxl)
+BuildRequires:  pkgconfig(libjxl_threads)
+BuildRequires:  pkgconfig(sndfile)
+
+# Needed by plugin_git_export_test
+BuildRequires:  git-core
+# For desktop-file-validate command
+BuildRequires:  desktop-file-utils
+
+Requires:       hicolor-icon-theme	
+# segfault at startup if it cannot connect to the pipewire daemon
+Requires:       pipewire
+	
+# The plugin system uses git at runtime as well
+Requires:       git-core
+# Optional requirements for various functionality
+Recommends:     upower
+Recommends:     ddcutil
+Recommends:     gnome-keyring
+	
+# From fedora
+# Upstream doesn't currently offer a mechanism for building against system
+# copies of these libraries.
+Provides:       bundled(fzy)
+Provides:       bundled(luau)
+Provides:       bundled(material_color_utilities)
+Provides:       bundled(wuffs)
 
 Requires: brightnessctl
 Requires: dejavu-sans-fonts
-Requires: gpu-screen-recorder-gtk
-Requires: %{_lib}Qt6Multimedia
-Requires: quickshell
+Recommends: gpu-screen-recorder-gtk
 Requires: xdg-desktop-portal-gtk
 
-Recommends: cava
-Recommends: cliphist
+# for now
+#Recommends: cava
+#Recommends: cliphist
 Recommends: ddcutil
-Recommends: matugen
-Recommends: power-profiles-daemon
-Recommends: wlsunset
+#Recommends: matugen
+#Recommends: power-profiles-daemon
+#Recommends: wlsunset
+
+%rename noctalia-shell
 
 %description
-A beautiful, minimal desktop shell for Wayland that actually gets out of your way. 
-Built on Quickshell with a warm lavender aesthetic that you can easily customize to match your vibe.
+Noctalia is a native Wayland desktop shell for people who want a polished,
+configurable Linux desktop without stitching together a separate bar, launcher,
+notification daemon, lock screen, wallpaper tool, and settings UI.
 
 %prep
-%autosetup -n noctalia-release -p1
+%autosetup -n noctalia-%{basever}-%{prerel}.%{prerelnum} -p1
+
+# Upstream uses a git describe command to determine part of the --version
+# output.  Since we're not building from a git checkout, we can change the
+# fallback value to set this instead.
+sed -e '/fallback/ s/unknown/%{tag}/' -i meson.build
+
+# Remove shebangs and execute permissions from template apply scripts to avoid
+# rpmlint errors/warnings.
+find assets/templates -type f -name '*.sh' \
+    -exec sed -e '1 {/^#!/d}' -i '{}' + \
+    -exec chmod -x '{}' +
+    
+# Move bundled licenses to the top level to make inclusion in %%files easier.
+mv assets/fonts/tabler-icons-license.txt        LICENSE.tabler
+mv third_party/fzy/LICENSE                      LICENSE.fzy
+mv third_party/luau/LICENSE.txt                 LICENSE.luau
+mv third_party/luau/lua_LICENSE.txt             LICENSE.luau_lua
+mv third_party/material_color_utilities/LICENSE LICENSE.material_color_utilities
+mv third_party/wuffs/LICENSE-APACHE             LICENSE-Apache-2.0.wuffs
+mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
 
 %build
-# Nothing to build
+%meson	\
+	-Dtests=enabled \
+	-Dnative_optimizations=false
 
 %install
-install -dm755 "%{buildroot}%{_sysconfdir}/xdg/quickshell/noctalia-shell"
-cp -r ./* "%{buildroot}%{_sysconfdir}/xdg/quickshell/noctalia-shell/"
-install -dm755 "%{buildroot}%{_prefix}/lib/systemd/user"
-install -Dm644 ./Assets/Services/systemd/noctalia.service %{buildroot}%{_userunitdir}/noctalia.service
+%meson_install
+
+# shell completions
+install -d -m 0755 %{buildroot}%{bash_completions_dir}
+%{buildroot}%{_bindir}/noctalia completions bash > %{buildroot}%{bash_completions_dir}/noctalia
+install -d -m 0755 %{buildroot}%{fish_completions_dir}
+%{buildroot}%{_bindir}/noctalia completions fish > %{buildroot}%{fish_completions_dir}/noctalia.fish
+install -d -m 0755 %{buildroot}%{zsh_completions_dir}
+%{buildroot}%{_bindir}/noctalia completions zsh > %{buildroot}%{zsh_completions_dir}/_noctalia
 
 %files
-%license LICENSE
-%doc README.md
-#dir %{_sysconfdir}/xdg/quickshell/noctalia-shell/
-%{_userunitdir}/noctalia.service
-%config %{_sysconfdir}/xdg/quickshell/noctalia-shell/
+%license LICENSE*
+%{_bindir}/noctalia
+%{_datadir}/applications/dev.noctalia.Noctalia.desktop
+%{_datadir}/icons/hicolor/scalable/apps/noctalia.svg
+%{_datadir}/noctalia
+%{bash_completions_dir}/noctalia
+%{fish_completions_dir}/noctalia.fish
+%{zsh_completions_dir}/_noctalia
