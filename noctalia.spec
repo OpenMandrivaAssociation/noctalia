@@ -82,7 +82,7 @@ Provides:       bundled(material_color_utilities)
 Provides:       bundled(wuffs)
 
 Requires: brightnessctl
-Requires: dejavu-sans-fonts
+Requires: fonts-ttf-dejavu
 Recommends: gpu-screen-recorder-gtk
 Requires: xdg-desktop-portal-gtk
 
