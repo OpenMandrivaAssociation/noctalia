@@ -135,12 +135,12 @@ mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
 %meson_install
 
 # shell completions
-install -d -m 0755 %{buildroot}%{bash_completions_dir}
-%{buildroot}%{_bindir}/noctalia completions bash > %{buildroot}%{bash_completions_dir}/noctalia
-install -d -m 0755 %{buildroot}%{fish_completions_dir}
-%{buildroot}%{_bindir}/noctalia completions fish > %{buildroot}%{fish_completions_dir}/noctalia.fish
-install -d -m 0755 %{buildroot}%{zsh_completions_dir}
-%{buildroot}%{_bindir}/noctalia completions zsh > %{buildroot}%{zsh_completions_dir}/_noctalia
+install -d -m 0755 %{buildroot}%{_datadir}/bash-completion/completions/
+%{buildroot}%{_bindir}/noctalia completions bash > %{buildroot}%{_datadir}/bash-completion/completions/noctalia
+install -d -m 0755 %{buildroot}%{_datadir}/fish/vendor_completions.d/
+%{buildroot}%{_bindir}/noctalia completions fish > %{buildroot}%{_datadir}/fish/vendor_completions.d/noctalia.fish
+install -d -m 0755 %{buildroot}%{_datadir}/zsh/site-functions/
+%{buildroot}%{_bindir}/noctalia completions zsh > %{buildroot}%{_datadir}/zsh/site-functions/_noctalia
 
 %files
 %license LICENSE*
@@ -148,6 +148,6 @@ install -d -m 0755 %{buildroot}%{zsh_completions_dir}
 %{_datadir}/applications/dev.noctalia.Noctalia.desktop
 %{_datadir}/icons/hicolor/scalable/apps/noctalia.svg
 %{_datadir}/noctalia
-%{bash_completions_dir}/noctalia
-%{fish_completions_dir}/noctalia.fish
-%{zsh_completions_dir}/_noctalia
+%{_datadir}/bash-completion/completions/noctalia
+%{_datadir}/fish/vendor_completions.d/noctalia.fish
+%{_datadir}/zsh/site-functions/_noctalia
