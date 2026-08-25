@@ -15,6 +15,7 @@ URL:            https://github.com/noctalia-dev/noctalia
 Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9/%{name}-5.0.0-beta.9.tar.gz
 
 BuildRequires:	meson
+BuildRequires:	dbus-daemon
 BuildRequires:  pkgconfig(sdbus-c++)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-protocols)
@@ -127,6 +128,8 @@ mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
 %meson	\
 	-Dtests=enabled \
 	-Dnative_optimizations=false
+
+%meson_build	
 
 %install
 %meson_install
