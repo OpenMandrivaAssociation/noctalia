@@ -1,6 +1,3 @@
-# disable empty debuh
-#global debug_package %{nil}
-
 %define basever     5.0.0
 %define prerel      beta
 %define prerelnum   9
@@ -9,7 +6,7 @@
 Name:           noctalia
 Version:	%{basever}~%{prerel}.%{prerelnum}
 Release:        1
-Summary:        A Quickshell-based custom shell setup
+Summary:        A sleek, customizable desktop shell crafted for Wayland.
 License:        MIT
 URL:            https://github.com/noctalia-dev/noctalia
 Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9/%{name}-5.0.0-beta.9.tar.gz
@@ -46,6 +43,9 @@ BuildRequires:  pkgconfig(md4c)
 BuildRequires:  pkgconfig(nlohmann_json)
 BuildRequires:  pkgconfig(tomlplusplus)
 BuildRequires:  pkgconfig(libical)
+BuildRequires:	pkgconfig(glesv2)
+BuildRequires:	pkgconfig(sndfile)
+BuildRequires:	egl-devel
 BuildRequires:  pam-devel
 BuildRequires:  glibc-devel
 BuildRequires:  pkgconfig(jemalloc)
@@ -57,10 +57,11 @@ BuildRequires:  pkgconfig(libjxl)
 BuildRequires:  pkgconfig(libjxl_threads)
 BuildRequires:  pkgconfig(sndfile)
 
+# As last resort fallback
+BuildRequires:	pkgconfig(epoxy)
+
 # Needed by plugin_git_export_test
 BuildRequires:  git-core
-# For desktop-file-validate command
-BuildRequires:  desktop-file-utils
 
 Requires:       hicolor-icon-theme	
 # segfault at startup if it cannot connect to the pipewire daemon
@@ -83,8 +84,8 @@ Provides:       bundled(wuffs)
 
 Requires: brightnessctl
 Requires: fonts-ttf-dejavu
-Recommends: gpu-screen-recorder-gtk
-Requires: xdg-desktop-portal-gtk
+#Recommends: gpu-screen-recorder-gtk
+#Recommends: xdg-desktop-portal-gtk
 
 # for now
 #Recommends: cava
@@ -97,9 +98,9 @@ Recommends: ddcutil
 %rename noctalia-shell
 
 %description
-Noctalia is a native Wayland desktop shell for people who want a polished,
-configurable Linux desktop without stitching together a separate bar, launcher,
-notification daemon, lock screen, wallpaper tool, and settings UI.
+Noctalia is a native Wayland desktop shell for people who want a polished, configurable Linux desktop without stitching together a separate bar, launcher, notification daemon, lock screen, wallpaper tool, and settings UI.
+
+It provides the shell layer around your compositor: bars, widgets, dock, launcher, control center, notifications, wallpaper, lock screen, session actions, clipboard history, OSDs, tray integration, and desktop widgets. The project is built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI, rendering, configuration, and IPC model are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
 
 %prep
 %autosetup -n noctalia-%{basever}-%{prerel}.%{prerelnum} -p1
@@ -127,7 +128,8 @@ mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
 %build
 %meson	\
 	-Dtests=enabled \
-	-Dnative_optimizations=false
+	-Dnative_optimizations=false \
+	--buildtype=release
 
 %meson_build	
 
