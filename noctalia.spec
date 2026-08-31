@@ -1,6 +1,6 @@
 %define basever     5.0.0
 %define prerel      beta
-%define prerelnum   9
+%define prerelnum   10
 %define tag         v%{basever}-%{prerel}.%{prerelnum}
 
 Name:           noctalia
@@ -9,7 +9,7 @@ Release:        1
 Summary:        A sleek, customizable desktop shell crafted for Wayland.
 License:        MIT
 URL:            https://github.com/noctalia-dev/noctalia
-Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.9/%{name}-5.0.0-beta.9.tar.gz
+Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.10/%{name}-5.0.0-beta.10.tar.gz
 
 BuildRequires:	meson
 BuildRequires:	dbus-daemon
