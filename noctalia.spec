@@ -1,15 +1,15 @@
-%define basever     5.0.0
-%define prerel      beta
-%define prerelnum   10
-%define tag         v%{basever}-%{prerel}.%{prerelnum}
+#define basever     5.0.0
+#define prerel      beta
+#define prerelnum   10
+#define tag         v%{basever}-%{prerel}.%{prerelnum}
 
 Name:           noctalia
-Version:	%{basever}~%{prerel}.%{prerelnum}
+Version:	5.0.1
 Release:        1
 Summary:        A sleek, customizable desktop shell crafted for Wayland.
 License:        MIT
 URL:            https://github.com/noctalia-dev/noctalia
-Source0:        https://github.com/noctalia-dev/noctalia/archive/v5.0.0-beta.10/%{name}-5.0.0-beta.10.tar.gz
+Source0:        https://github.com/noctalia-dev/noctalia/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:	meson
 BuildRequires:	dbus-daemon
@@ -103,12 +103,12 @@ Noctalia is a native Wayland desktop shell for people who want a polished, confi
 It provides the shell layer around your compositor: bars, widgets, dock, launcher, control center, notifications, wallpaper, lock screen, session actions, clipboard history, OSDs, tray integration, and desktop widgets. The project is built directly on Wayland and OpenGL ES with no Qt or GTK dependency, so the UI, rendering, configuration, and IPC model are designed as one cohesive shell instead of a collection of unrelated panels and scripts.
 
 %prep
-%autosetup -n noctalia-%{basever}-%{prerel}.%{prerelnum} -p1
+%autosetup -n noctalia-%{version} -p1
 
 # Upstream uses a git describe command to determine part of the --version
 # output.  Since we're not building from a git checkout, we can change the
 # fallback value to set this instead.
-sed -e '/fallback/ s/unknown/%{tag}/' -i meson.build
+sed -e '/fallback/ s/unknown/%{version}/' -i meson.build
 
 # Remove shebangs and execute permissions from template apply scripts to avoid
 # rpmlint errors/warnings.
