@@ -143,6 +143,7 @@ install -d -m 0755 %{buildroot}%{_datadir}/zsh/site-functions/
 %license LICENSE*
 %{_bindir}/noctalia
 %{_datadir}/applications/dev.noctalia.Noctalia.desktop
+%{_datadir}/applications/dev.noctalia.Noctalia.Annotator.desktop
 %{_datadir}/icons/hicolor/scalable/apps/noctalia.svg
 %{_datadir}/noctalia
 %{_datadir}/bash-completion/completions/noctalia
