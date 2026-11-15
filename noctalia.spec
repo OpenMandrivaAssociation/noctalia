@@ -1,6 +1,6 @@
 Name:           noctalia
-Version:	5.4.1
-Release:        2
+Version:	5.5.0
+Release:        1
 Summary:        A sleek, customizable desktop shell crafted for Wayland.
 License:        MIT
 URL:            https://github.com/noctalia-dev/noctalia
@@ -112,13 +112,13 @@ find assets/templates -type f -name '*.sh' \
     -exec chmod -x '{}' +
     
 # Move bundled licenses to the top level to make inclusion in %%files easier.
-mv assets/fonts/tabler-icons-license.txt        LICENSE.tabler
+#mv assets/fonts/tabler-icons-license.txt        LICENSE.tabler
 mv third_party/fzy/LICENSE                      LICENSE.fzy
 mv third_party/luau/LICENSE.txt                 LICENSE.luau
 mv third_party/luau/lua_LICENSE.txt             LICENSE.luau_lua
 mv third_party/material_color_utilities/LICENSE LICENSE.material_color_utilities
-mv third_party/wuffs/LICENSE-APACHE             LICENSE-Apache-2.0.wuffs
-mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
+#mv third_party/wuffs/LICENSE-APACHE             LICENSE-Apache-2.0.wuffs
+#mv third_party/wuffs/LICENSE-MIT                LICENSE-MIT.wuffs
 
 %build
 %meson	\
