@@ -1,5 +1,5 @@
 Name:           noctalia
-Version:	5.5.0
+Version:	5.6.0
 Release:        1
 Summary:        A sleek, customizable desktop shell crafted for Wayland.
 License:        MIT
@@ -142,6 +142,7 @@ install -d -m 0755 %{buildroot}%{_datadir}/zsh/site-functions/
 %files
 %license LICENSE*
 %{_bindir}/noctalia
+%{_libexecdir}/noctalia/noctalia-pam-helper
 %{_datadir}/applications/dev.noctalia.Noctalia.desktop
 %{_datadir}/applications/dev.noctalia.Noctalia.Annotator.desktop
 %{_datadir}/icons/hicolor/scalable/apps/noctalia.svg
